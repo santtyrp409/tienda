@@ -10,32 +10,27 @@ body {
     background-color: #f4f4f4;
     margin: 0;
 }
-
 header {
     background-color: #e63946;
     color: white;
     padding: 20px;
     text-align: center;
 }
-
 .horario {
     background: #333;
     color: white;
     text-align: center;
     padding: 8px;
 }
-
 section {
     padding: 20px;
 }
-
 .item, .pedido {
     background: white;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 8px;
 }
-
 button {
     background-color: #e63946;
     color: white;
@@ -44,34 +39,25 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
-
 button.quitar {
     background-color: #555;
     margin-left: 5px;
 }
-
-input, textarea, select {
+input, textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
 }
-
 .total {
     font-size: 18px;
     font-weight: bold;
 }
-
-/* Pantalla final */
 #final {
     display: none;
     background: white;
     padding: 20px;
     margin: 20px;
     border-radius: 10px;
-}
-
-#final h2 {
-    text-align: center;
 }
 </style>
 </head>
@@ -94,14 +80,10 @@ input, textarea, select {
         <h3>Cheeseburger</h3>
         <p>$5</p>
 
-        <!-- EXTRAS -->
-        <div>
-            <p><strong>Extras:</strong></p>
-            <label><input type="checkbox" id="extraCarne"> Extra carne (+$2)</label><br>
-            <label><input type="checkbox" id="extraCheddar"> Cheddar (+$1)</label><br>
-            <label><input type="checkbox" id="extraPanceta"> Panceta (+$1.5)</label><br>
-            <label><input type="checkbox" id="extraCebolla"> Cebolla (+$0.5)</label>
-        </div>
+        <label><input type="checkbox" id="extraCarne"> Extra carne (+$2)</label><br>
+        <label><input type="checkbox" id="extraCheddar"> Cheddar (+$1)</label><br>
+        <label><input type="checkbox" id="extraPanceta"> Panceta (+$1.5)</label><br>
+        <label><input type="checkbox" id="extraCebolla"> Cebolla (+$0.5)</label><br><br>
 
         <button onclick="agregarCheeseburger()">Agregar</button>
     </div>
@@ -109,110 +91,74 @@ input, textarea, select {
     <div class="item">
         <h3>Pizza</h3>
         <p>$7</p>
-        <button onclick="agregar('Pizza', 7)">Agregar</button>
+        <button onclick="agregar('Pizza',7)">Agregar</button>
     </div>
 
     <div class="item">
         <h3>Papas Fritas</h3>
         <p>$3</p>
-        <button onclick="agregar('Papas Fritas', 3)">Agregar</button>
+        <button onclick="agregar('Papas Fritas',3)">Agregar</button>
     </div>
 </section>
 
 <section class="pedido">
     <h2>🛒 Tu Pedido</h2>
     <ul id="listaPedido"></ul>
-
-    <p>Envío: $<span id="envio">2</span></p>
-    <p class="total">Total Final: $<span id="total">0</span></p>
+    <p>Envío: $2</p>
+    <p class="total">Total: $<span id="total">0</span></p>
 </section>
 
 <section id="datos">
     <h2>📝 Datos del Cliente</h2>
 
-    <label>Nombre</label>
-    <input type="text" id="nombre">
+    <input id="nombre" placeholder="Nombre">
+    <input id="direccion" placeholder="Dirección">
 
-    <label>Forma de pago</label>
-    <div style="display:flex; gap:15px; margin-bottom:10px;">
-        <label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
-        <label><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
-    </div>
+    <label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
+    <label><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
 
-    <label>Dirección</label>
-    <input type="text" id="direccion">
+    <textarea id="comentario" placeholder="Comentarios"></textarea>
 
-    <label>Descripción / Comentarios</label>
-    <textarea id="comentario"></textarea>
-
-    <button onclick="confirmarPedido()">✅ Confirmar Pedido</button>
+    <button onclick="confirmarPedido()">Confirmar Pedido</button>
 </section>
 
-<!-- PANTALLA FINAL -->
 <div id="final">
-    <h2>📌 Confirmación de Pedido</h2>
+    <h2>📌 Pedido listo</h2>
     <div id="resumen"></div>
-    <p><strong>Total final:</strong> $<span id="totalFinal"></span></p>
+    <p><strong>Total:</strong> $<span id="totalFinal"></span></p>
 
     <button id="btnPago" style="display:none;" onclick="irMercadoPago()">💳 Pagar con Mercado Pago</button>
-    <button onclick="volver()">↩️ Volver al menú</button>
+    <button id="btnWhatsapp" style="display:none;" onclick="enviarWhatsapp()">📲 Enviar pedido por WhatsApp</button>
+
+    <br><br>
+    <button onclick="volver()">↩️ Volver</button>
 </div>
 
 <script>
 let pedido = {};
 let envio = 2;
 let totalFinalGlobal = 0;
+let mensajeWhatsapp = "";
 
 function agregar(nombre, precio) {
-    if (!pedido[nombre]) {
-        pedido[nombre] = { precio, cantidad: 1 };
-    } else {
-        pedido[nombre].cantidad++;
-    }
+    pedido[nombre] = pedido[nombre] || { precio, cantidad: 0 };
+    pedido[nombre].cantidad++;
     actualizarPedido();
 }
 
 function agregarCheeseburger() {
-    let precioBase = 5;
-    let nombre = "Cheeseburger";
-
+    let precio = 5;
     let extras = [];
-    let precioExtras = 0;
 
-    if (document.getElementById("extraCarne").checked) {
-        extras.push("Extra carne (+$2)");
-        precioExtras += 2;
-    }
-    if (document.getElementById("extraCheddar").checked) {
-        extras.push("Cheddar (+$1)");
-        precioExtras += 1;
-    }
-    if (document.getElementById("extraPanceta").checked) {
-        extras.push("Panceta (+$1.5)");
-        precioExtras += 1.5;
-    }
-    if (document.getElementById("extraCebolla").checked) {
-        extras.push("Cebolla (+$0.5)");
-        precioExtras += 0.5;
-    }
+    if (extraCarne.checked) { precio += 2; extras.push("Extra carne"); }
+    if (extraCheddar.checked) { precio += 1; extras.push("Cheddar"); }
+    if (extraPanceta.checked) { precio += 1.5; extras.push("Panceta"); }
+    if (extraCebolla.checked) { precio += 0.5; extras.push("Cebolla"); }
 
-    let nombreFinal = nombre;
-    if (extras.length > 0) {
-        nombreFinal += " (" + extras.join(", ") + ")";
-    }
+    let nombre = "Cheeseburger" + (extras.length ? " (" + extras.join(", ") + ")" : "");
+    agregar(nombre, precio);
 
-    agregar(nombreFinal, precioBase + precioExtras);
-
-    document.getElementById("extraCarne").checked = false;
-    document.getElementById("extraCheddar").checked = false;
-    document.getElementById("extraPanceta").checked = false;
-    document.getElementById("extraCebolla").checked = false;
-}
-
-function quitar(nombre) {
-    pedido[nombre].cantidad--;
-    if (pedido[nombre].cantidad <= 0) delete pedido[nombre];
-    actualizarPedido();
+    extraCarne.checked = extraCheddar.checked = extraPanceta.checked = extraCebolla.checked = false;
 }
 
 function actualizarPedido() {
@@ -221,130 +167,84 @@ function actualizarPedido() {
     lista.innerHTML = "";
 
     for (let item in pedido) {
-        let subtotal = pedido[item].precio * pedido[item].cantidad;
-        total += subtotal;
-
-        let li = document.createElement("li");
-        li.innerHTML =
-            item + " x" + pedido[item].cantidad +
-            " - $" + subtotal +
-            ` <button class="quitar" onclick="quitar('${item}')">−</button>`;
-        lista.appendChild(li);
+        let sub = pedido[item].precio * pedido[item].cantidad;
+        total += sub;
+        lista.innerHTML += `<li>${item} x${pedido[item].cantidad} - $${sub}
+        <button class="quitar" onclick="quitar('${item}')">−</button></li>`;
     }
 
-    document.getElementById("total").textContent = total + envio;
+    document.getElementById("total").innerText = (total + envio).toFixed(2);
+}
+
+function quitar(item) {
+    pedido[item].cantidad--;
+    if (pedido[item].cantidad <= 0) delete pedido[item];
+    actualizarPedido();
 }
 
 function confirmarPedido() {
-    if (Object.keys(pedido).length === 0) {
-        alert("Agregá al menos un producto");
-        return;
-    }
+    if (!Object.keys(pedido).length) return alert("Agregá productos");
+    if (!nombre.value || !direccion.value) return alert("Completá nombre y dirección");
 
-    let nombre = document.getElementById("nombre").value;
     let pago = document.querySelector('input[name="pago"]:checked').value;
-    let direccion = document.getElementById("direccion").value;
-    let comentario = document.getElementById("comentario").value;
-
-    let detalleTexto = "";
-    let detallePrint = "";
     let total = 0;
+    let detalle = "";
 
-    for (let item in pedido) {
-        let subtotal = pedido[item].precio * pedido[item].cantidad;
-        total += subtotal;
-        detalleTexto += `${item} x${pedido[item].cantidad} - $${subtotal}%0A`;
-        detallePrint += `${item} x${pedido[item].cantidad} - $${subtotal}\n`;
+    for (let i in pedido) {
+        let sub = pedido[i].precio * pedido[i].cantidad;
+        total += sub;
+        detalle += `${i} x${pedido[i].cantidad} - $${sub}%0A`;
     }
 
-    let totalFinal = total + envio;
-    totalFinalGlobal = totalFinal;
+    totalFinalGlobal = total + envio;
 
-    // WHATSAPP
-    let mensaje =
-        "🍔 NUEVO PEDIDO%0A%0A" +
-        "Nombre: " + nombre + "%0A" +
-        "Dirección: " + direccion + "%0A" +
-        "Pago: " + pago + "%0A" +
-        "Comentario: " + comentario + "%0A%0A" +
-        "Pedido:%0A" + detalleTexto +
-        "Envío: $2%0A" +
-        "TOTAL: $" + totalFinal;
+    mensajeWhatsapp =
+        `🍔 NUEVO PEDIDO%0A` +
+        `Nombre: ${nombre.value}%0A` +
+        `Dirección: ${direccion.value}%0A` +
+        `Pago: ${pago}%0A%0A` +
+        detalle +
+        `Envío: $2%0A` +
+        `TOTAL: $${totalFinalGlobal}`;
 
-    window.open(
-        "https://wa.me/5491162911053?text=" + mensaje,
-        "_blank"
-    );
+    menu.style.display = datos.style.display = "none";
+    final.style.display = "block";
 
-    // IMPRIMIR COMANDA
-    let ventana = window.open("", "PRINT", "width=400,height=600");
-    ventana.document.write(`
-        <html>
-        <head>
-            <title>Comanda</title>
-            <style>
-                body { font-family: monospace; }
-                h2 { text-align: center; }
-                pre { font-size: 14px; }
-            </style>
-        </head>
-        <body>
-            <h2>🧾 COMANDA</h2>
-            <p><strong>Cliente:</strong> ${nombre}</p>
-            <p><strong>Dirección:</strong> ${direccion}</p>
-            <p><strong>Pago:</strong> ${pago}</p>
-            <hr>
-            <pre>${detallePrint}</pre>
-            <p><strong>Envío:</strong> $2</p>
-            <p><strong>TOTAL:</strong> $${totalFinal}</p>
-            <p><strong>Obs:</strong> ${comentario}</p>
-        </body>
-        </html>
-    `);
+    resumen.innerHTML = detalle.replace(/%0A/g, "<br>");
+    totalFinal.innerText = totalFinalGlobal;
 
-    ventana.document.close();
-    ventana.focus();
-    ventana.print();
-    ventana.close();
-
-    // MOSTRAR PANTALLA FINAL
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("datos").style.display = "none";
-    document.getElementById("final").style.display = "block";
-
-    let resumen = document.getElementById("resumen");
-    resumen.innerHTML = detallePrint.replace(/\n/g, "<br>");
-
-    document.getElementById("totalFinal").innerText = totalFinal;
-
-    // Mostrar botón de Mercado Pago SOLO si eligió Transferencia
-    if (pago === "Transferencia") {
-        document.getElementById("btnPago").style.display = "block";
-    } else {
-        document.getElementById("btnPago").style.display = "none";
-    }
+    btnPago.style.display = pago === "Transferencia" ? "block" : "none";
+    btnWhatsapp.style.display = "block";
 }
 
 function irMercadoPago() {
-    let linkMP = "https://link.mercadopago.com.ar/frakev";
-
-    // COPIAR TOTAL AL PORTAPAPELES
     navigator.clipboard.writeText(totalFinalGlobal.toString())
         .then(() => {
-            alert("Total a pagar: $" + totalFinalGlobal + "\nSe copió el monto al portapapeles.\nAhora se abrirá Mercado Pago.");
+            alert(
+                "Monto $" + totalFinalGlobal +
+                " copiado.\n\nPagá en Mercado Pago y luego VOLVÉ a esta página para enviar el pedido por WhatsApp."
+            );
         })
         .catch(() => {
-            alert("Total a pagar: $" + totalFinalGlobal + "\nAhora se abrirá Mercado Pago.");
+            alert(
+                "Pagá $" + totalFinalGlobal +
+                " en Mercado Pago y luego VOLVÉ a esta página para enviar el pedido por WhatsApp."
+            );
         });
 
-    // REDIRECCIONAR A MERCADO PAGO EN LA MISMA PESTAÑA
-    window.location.href = linkMP;
+    // ABRE MERCADO PAGO EN OTRA PESTAÑA / APP
+    window.open(
+        "https://link.mercadopago.com.ar/frakev",
+        "_blank"
+    );
+}
+
+function enviarWhatsapp() {
+    window.open("https://wa.me/5491162911053?text=" + mensajeWhatsapp, "_blank");
 }
 
 function volver() {
-    document.getElementById("menu").style.display = "block";
-    document.getElementById("datos").style.display = "block";
-    document.getElementById("final").style.display = "none";
+    location.reload();
 }
 </script>
 
