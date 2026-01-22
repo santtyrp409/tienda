@@ -4,60 +4,189 @@
 <meta charset="UTF-8">
 <title>Tienda Online de Comidas</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-image: url("https://images.unsplash.com/photo-1550547660-d9450f859349");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #222;
 }
+
+/* OVERLAY GENERAL */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: -1;
+}
+
+/* CONTENEDOR */
+.container {
+    max-width: 720px;
+    margin: auto;
+    padding: 10px;
+}
+
+/* HEADER */
 header {
-    background-color: #e63946;
+    background: linear-gradient(135deg, #e63946, #c92d3a);
     color: white;
-    padding: 20px;
+    padding: 20px 15px;
+    border-radius: 0 0 18px 18px;
     text-align: center;
 }
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+header p {
+    margin: 4px 0 0;
+    opacity: 0.9;
+}
+
+/* HORARIO */
 .horario {
-    background: #333;
+    margin: 12px auto;
+    padding: 8px;
+    background: rgba(0,0,0,0.6);
     color: white;
     text-align: center;
-    padding: 8px;
+    border-radius: 10px;
+    font-size: 14px;
 }
+
+/* SECCIONES */
 section {
-    padding: 20px;
+    margin-bottom: 14px;
+    padding: 14px;
+    background: rgba(255,255,255,0.65);
+    border-radius: 14px;
+    backdrop-filter: blur(4px);
 }
-.item, .pedido {
-    background: white;
-    padding: 15px;
+
+/* TITULOS */
+section h2 {
+    margin-top: 0;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 6px;
+}
+
+/* CARDS */
+.item {
+    background: rgba(255,255,255,0.55);
+    border-radius: 12px;
+    padding: 12px;
     margin-bottom: 10px;
-    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
-button {
-    background-color: #e63946;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 5px;
-    cursor: pointer;
+
+.item h3 {
+    margin: 0;
+    font-size: 16px;
 }
-button.quitar {
-    background-color: #555;
-    margin-left: 5px;
+
+.price {
+    font-weight: 600;
+    margin: 4px 0 6px;
 }
+
+/* FILAS EXTRAS */
+.extra-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.extra-row input {
+    width: 60px;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* INPUTS */
 input, textarea {
     width: 100%;
     padding: 8px;
-    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 8px;
+    font-family: inherit;
 }
+
+/* BOTONES */
+button {
+    width: 100%;
+    padding: 10px;
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+button.quitar {
+    width: auto;
+    padding: 4px 8px;
+    font-size: 12px;
+    background: #555;
+}
+
+/* PEDIDO */
+.pedido ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pedido li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
 .total {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
+    text-align: right;
 }
+
+/* FINAL */
 #final {
     display: none;
-    background: white;
-    padding: 20px;
-    margin: 20px;
-    border-radius: 10px;
+    background: rgba(255,255,255,0.75);
+    padding: 16px;
+    border-radius: 16px;
+}
+
+#final h2 {
+    text-align: center;
 }
 </style>
 </head>
@@ -69,16 +198,72 @@ input, textarea {
     <p>Pedidos online</p>
 </header>
 
-<div class="horario">
-    🕒 Horario: 19:00 a 23:30
-</div>
+<div class="container">
+
+<div class="horario">🕒 Horario: 19:00 a 23:30</div>
 
 <section id="menu">
-    <h2>📋 Menú</h2>
+<h2>📋 Menú</h2>
 
-    <div class="item">
-        <h3>Cheeseburger</h3>
-        <p>$5</p>
+<div class="item">
+<h3>Cheeseburger</h3>
+<p class="price">$5</p>
+<small>Incluye 2 carnes y 4 fetas de cheddar</small>
+
+<p><strong>Quitar (opcional)</strong></p>
+<div class="extra-row"><span>Carne</span><input type="number" id="quitarCarne" min="0" max="1" value="0"></div>
+<div class="extra-row"><span>Cheddar (2 fetas)</span><input type="number" id="quitarCheddar" min="0" max="2" value="0"></div>
+
+<p><strong>Agregar</strong></p>
+<div class="extra-row"><span>Extra carne (+$2)</span><input type="number" id="extraCarne" min="0" value="0"></div>
+<div class="extra-row"><span>Extra cheddar (+$1)</span><input type="number" id="extraCheddar" min="0" value="0"></div>
+<div class="extra-row"><span>Panceta (+$1.5)</span><input type="number" id="extraPanceta" min="0" value="0"></div>
+<div class="extra-row"><span>Cebolla (+$0.5)</span><input type="number" id="extraCebolla" min="0" value="0"></div>
+
+<button onclick="agregarCheeseburger()">Agregar al pedido</button>
+</div>
+
+<div class="item">
+<h3>Pizza</h3>
+<p class="price">$7</p>
+<button onclick="agregar('Pizza',7)">Agregar</button>
+</div>
+
+<div class="item">
+<h3>Papas Fritas</h3>
+<p class="price">$3</p>
+<button onclick="agregar('Papas Fritas',3)">Agregar</button>
+</div>
+</section>
+
+<section class="pedido">
+<h2>🛒 Tu Pedido</h2>
+<ul id="listaPedido"></ul>
+<p>Envío: $2</p>
+<p class="total">$<span id="total">0</span></p>
+</section>
+
+<section id="datos">
+<h2>📝 Datos</h2>
+<input id="nombre" placeholder="Nombre">
+<label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
+<label><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
+<input id="direccion" placeholder="Dirección">
+<textarea id="comentario" placeholder="Comentarios"></textarea>
+<button onclick="confirmarPedido()">Confirmar pedido</button>
+</section>
+
+<div id="final">
+<h2>📌 Pedido confirmado</h2>
+<div id="resumen"></div>
+<p class="total">$<span id="totalFinal"></span></p>
+<button id="btnPago" onclick="irMercadoPago()" style="display:none;">Pagar con Mercado Pago</button>
+<button onclick="volver()">Volver</button>
+</div>
+
+</div>
+
+<!-- EL JS SIGUE IGUAL AL QUE YA TENÍAS -->
 
         <label><input type="checkbox" id="extraCarne"> Extra carne (+$2)</label><br>
         <label><input type="checkbox" id="extraCheddar"> Cheddar (+$1)</label><br>
