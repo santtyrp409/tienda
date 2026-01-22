@@ -22,20 +22,39 @@ z-index:-1;
 header{background:#e63946;color:#fff;padding:15px;text-align:center}
 nav{display:flex;justify-content:center;gap:30px;background:#111;padding:10px}
 nav button{background:none;border:none;color:#fff;font-weight:600;cursor:pointer}
-.container{max-width:760px;margin:auto;padding:12px}
+.container{max-width:800px;margin:auto;padding:12px}
+
 .card{
-background:rgba(255,255,255,.28);
-backdrop-filter:blur(4px);
+background:rgba(255,255,255,.22);
+backdrop-filter:blur(5px);
 border-radius:16px;
 padding:14px;
 margin-bottom:14px;
 }
+
 .item{cursor:pointer}
-.opciones{display:none;margin-top:10px;border-top:1px dashed rgba(0,0,0,.3);padding-top:8px}
+.opciones{
+display:none;
+margin-top:10px;
+border-top:1px dashed rgba(0,0,0,.3);
+padding-top:10px;
+}
 .opciones.active{display:block}
-.extra-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+
+.extra-row{
+display:flex;
+justify-content:space-between;
+font-size:14px;
+margin-bottom:6px;
+}
 .extra-row input{width:60px}
-.quitar{font-size:12px;opacity:.85;margin-top:6px}
+
+.quitar{
+font-size:12px;
+opacity:.75;
+margin-top:8px;
+}
+
 button.accion{
 width:100%;
 margin-top:10px;
@@ -47,6 +66,7 @@ color:#fff;
 font-weight:600;
 cursor:pointer;
 }
+
 input, textarea{
 width:100%;
 padding:8px;
@@ -54,8 +74,10 @@ margin-bottom:8px;
 border-radius:8px;
 border:none;
 }
+
 iframe{width:100%;height:220px;border-radius:12px;border:0}
 ul{padding-left:18px}
+small{opacity:.85}
 </style>
 </head>
 
@@ -73,24 +95,79 @@ ul{padding-left:18px}
 
 <div class="container">
 
+<!-- MENU -->
 <section id="menu">
+
+<!-- CHEESE -->
 <div class="card item" onclick="toggle('cheese')">
 <h3>Cheeseburger</h3>
 <p>$5</p>
 <small>2 carnes · 4 cheddar</small>
+
 <div id="cheese" class="opciones">
 <div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
 <div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-p="1"></div>
+
+<div class="quitar">
+Quitar (opcional):<br>
+<label><input type="checkbox"> 1 carne</label><br>
+<label><input type="checkbox"> 2 fetas cheddar</label>
+</div>
+
 <button class="accion" onclick="agregar(event,'Cheeseburger',5,'cheese')">Agregar</button>
 </div>
 </div>
+
+<!-- MAGNIFICA -->
+<div class="card item" onclick="toggle('magni')">
+<h3>Magnífica</h3>
+<p>$6</p>
+<small>2 carnes · 2 cheddar · lechuga · tomate · pickles · cebolla · ketchup</small>
+
+<div id="magni" class="opciones">
+<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
+<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-p="1"></div>
+
+<div class="quitar">
+Quitar (opcional):<br>
+<label><input type="checkbox"> cebolla</label><br>
+<label><input type="checkbox"> pickles</label>
+</div>
+
+<button class="accion" onclick="agregar(event,'Magnífica',6,'magni')">Agregar</button>
+</div>
+</div>
+
+<!-- BACON -->
+<div class="card item" onclick="toggle('bacon')">
+<h3>Bacon</h3>
+<p>$7</p>
+<small>2 carnes · 4 cheddar · 2 pancetas</small>
+
+<div id="bacon" class="opciones">
+<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
+<div class="extra-row">Extra panceta (+$1) <input type="number" min="0" value="0" data-p="1"></div>
+
+<div class="quitar">
+Quitar (opcional):<br>
+<label><input type="checkbox"> 1 panceta</label><br>
+<label><input type="checkbox"> 2 fetas cheddar</label>
+</div>
+
+<button class="accion" onclick="agregar(event,'Bacon',7,'bacon')">Agregar</button>
+</div>
+</div>
+
 </section>
 
+<!-- INFO -->
 <section id="info" style="display:none" class="card">
 <h3>Información</h3>
-<p>🕒 19:00 a 23:30</p>
+<p>🕒 Horario: 19:00 a 23:30</p>
+<p>📍 Envíos a domicilio</p>
 </section>
 
+<!-- PEDIDO -->
 <section class="card">
 <h3>🛒 Tu Pedido</h3>
 <ul id="lista"></ul>
@@ -98,23 +175,23 @@ ul{padding-left:18px}
 <p><strong>Total: $<span id="total">0</span></strong></p>
 </section>
 
+<!-- DATOS -->
 <section class="card">
-<h3>📝 Datos del cliente</h3>
+<h3>📍 Datos del cliente</h3>
 
 <input id="nombre" placeholder="Nombre y Apellido">
 <input id="direccion" placeholder="Dirección y altura" onblur="actualizarMapa()">
 <input id="entre" placeholder="Entre calles">
+<textarea id="descripcion" placeholder="Descripción de la casa"></textarea>
 
 <button class="accion" onclick="usarUbicacion()">📍 Usar mi ubicación</button>
 
 <iframe id="mapa" src="https://www.google.com/maps?q=Buenos%20Aires&output=embed"></iframe>
 
-<textarea id="descripcion" placeholder="Descripción de la casa"></textarea>
-
 <label><input type="radio" name="pago" value="Transferencia"> Transferencia</label><br>
 <label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
 
-<button class="accion" onclick="confirmar()">Confirmar Pedido</button>
+<button class="accion" onclick="confirmar()">Enviar pedido por WhatsApp</button>
 </section>
 
 </div>
@@ -136,7 +213,26 @@ document.getElementById(id).classList.toggle('active');
 
 function agregar(e,nombre,precio,id){
 e.stopPropagation();
-pedido.push({desc:nombre,precio});
+let box=document.getElementById(id);
+let extras=0;
+let detalle=[];
+
+box.querySelectorAll('input[type=number]').forEach(i=>{
+let cant=Number(i.value);
+if(cant>0){
+extras+=cant*Number(i.dataset.p);
+detalle.push(`+${cant} extra`);
+}
+});
+
+box.querySelectorAll('input[type=checkbox]').forEach(c=>{
+if(c.checked) detalle.push(`sin ${c.parentNode.textContent.trim()}`);
+});
+
+pedido.push({
+texto:`${nombre} (${detalle.join(", ")||"normal"})`,
+precio:precio+extras
+});
 actualizar();
 }
 
@@ -145,7 +241,7 @@ lista.innerHTML="";
 let sum=0;
 pedido.forEach((p,i)=>{
 sum+=p.precio;
-lista.innerHTML+=`<li>${p.desc} $${p.precio} <button onclick="pedido.splice(${i},1);actualizar()">x</button></li>`;
+lista.innerHTML+=`<li>${p.texto} $${p.precio} <button onclick="pedido.splice(${i},1);actualizar()">x</button></li>`;
 });
 let envio=calcularEnvio();
 envioSpan.textContent=envio;
@@ -153,19 +249,17 @@ totalFinal=sum+envio;
 total.textContent=totalFinal;
 }
 
-function actualizarMapa(){
-let q=encodeURIComponent(direccion.value+" "+entre.value);
-mapa.src=`https://www.google.com/maps?q=${q}&output=embed`;
-guardarDatos();
-}
-
 function usarUbicacion(){
 navigator.geolocation.getCurrentPosition(pos=>{
 clienteLatLng={lat:pos.coords.latitude,lng:pos.coords.longitude};
 mapa.src=`https://www.google.com/maps?q=${clienteLatLng.lat},${clienteLatLng.lng}&output=embed`;
 actualizar();
-guardarDatos();
 });
+}
+
+function actualizarMapa(){
+let q=encodeURIComponent(direccion.value+" "+entre.value);
+mapa.src=`https://www.google.com/maps?q=${q}&output=embed`;
 }
 
 function distanciaKm(a,b){
@@ -186,29 +280,18 @@ if(d<=4) return 3;
 return 4;
 }
 
-function guardarDatos(){
-localStorage.setItem("cliente",JSON.stringify({
-nombre:nombre.value,
-direccion:direccion.value,
-entre:entre.value,
-descripcion:descripcion.value,
-clienteLatLng
-}));
-}
+function confirmar(){
+let pago=document.querySelector('input[name=pago]:checked').value;
+let mapsLink=clienteLatLng
+?`https://www.google.com/maps?q=${clienteLatLng.lat},${clienteLatLng.lng}`
+:"";
 
-(function cargar(){
-let d=localStorage.getItem("cliente");
-if(!d) return;
-d=JSON.parse(d);
-nombre.value=d.nombre||"";
-direccion.value=d.direccion||"";
-entre.value=d.entre||"";
-descripcion.value=d.descripcion||"";
-clienteLatLng=d.clienteLatLng;
-if(clienteLatLng){
-mapa.src=`https://www.google.com/maps?q=${clienteLatLng.lat},${clienteLatLng.lng}&output=embed`;
+let msg=`PEDIDO\n\nCliente: ${nombre.value}\n\n`;
+pedido.forEach(p=>msg+=`• ${p.texto}\n`);
+msg+=`\nTotal: $${totalFinal}\nPago: ${pago}\n\nDirección: ${direccion.value}\nEntre calles: ${entre.value}\n${descripcion.value}\n\nUbicación: ${mapsLink}`;
+
+window.open(`https://wa.me/549XXXXXXXXXX?text=${encodeURIComponent(msg)}`);
 }
-})();
 </script>
 
 </body>
