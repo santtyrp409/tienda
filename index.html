@@ -2,295 +2,256 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Hamburguesería</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>Tienda Online de Comidas</title>
 
 <style>
-*{box-sizing:border-box}
 body{
-margin:0;
-font-family:Poppins,sans-serif;
-background:url("https://images.unsplash.com/photo-1550547660-d9450f859349") center/cover fixed;
+    font-family:Arial, sans-serif;
+    margin:0;
+    background:url("https://images.unsplash.com/photo-1550547660-d9450f859349") center/cover fixed;
 }
 body::before{
-content:"";
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.55);
-z-index:-1;
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    z-index:-1;
 }
-header{background:#e63946;color:#fff;padding:15px;text-align:center}
-nav{display:flex;justify-content:center;gap:30px;background:#111;padding:10px}
-nav button{background:none;border:none;color:#fff;font-weight:600;cursor:pointer}
-.container{max-width:800px;margin:auto;padding:12px}
-
-.card{
-background:rgba(255,255,255,.22);
-backdrop-filter:blur(5px);
-border-radius:16px;
-padding:14px;
-margin-bottom:14px;
+header{
+    background:#e63946;
+    color:white;
+    padding:20px;
+    text-align:center;
 }
-
-.item{cursor:pointer}
-.opciones{
-display:none;
-margin-top:10px;
-border-top:1px dashed rgba(0,0,0,.3);
-padding-top:10px;
+.horario{
+    background:#333;
+    color:white;
+    text-align:center;
+    padding:8px;
 }
-.opciones.active{display:block}
-
-.extra-row{
-display:flex;
-justify-content:space-between;
-font-size:14px;
-margin-bottom:6px;
+section{
+    padding:20px;
+    background:rgba(255,255,255,0.8);
+    margin:15px;
+    border-radius:10px;
 }
-.extra-row input{width:60px}
-
-.quitar{
-font-size:12px;
-opacity:.75;
-margin-top:8px;
+.item,.pedido{
+    background:rgba(255,255,255,0.75);
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:8px;
 }
-
-button.accion{
-width:100%;
-margin-top:10px;
-padding:10px;
-border:none;
-border-radius:12px;
-background:#e63946;
-color:#fff;
-font-weight:600;
-cursor:pointer;
+button{
+    background:#e63946;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:5px;
+    cursor:pointer;
 }
-
-input, textarea{
-width:100%;
-padding:8px;
-margin-bottom:8px;
-border-radius:8px;
-border:none;
+button.quitar{
+    background:#555;
+    margin-left:5px;
 }
-
-iframe{width:100%;height:220px;border-radius:12px;border:0}
-ul{padding-left:18px}
-small{opacity:.85}
+input,textarea{
+    width:100%;
+    padding:8px;
+    margin-bottom:10px;
+}
+.total{
+    font-size:18px;
+    font-weight:bold;
+}
+#final,#adminPanel{
+    display:none;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🍔 Hamburguesería</h1>
-<p>Pedidos Online</p>
+<h1>🍔 Mi Tienda de Comidas</h1>
+<p>Pedidos online</p>
 </header>
 
-<nav>
-<button onclick="mostrar('menu')">MENÚ</button>
-<button onclick="mostrar('info')">INFORMACIÓN</button>
-</nav>
+<div class="horario">🕒 Horario: 19:00 a 23:30</div>
 
-<div class="container">
-
-<!-- MENU -->
 <section id="menu">
+<h2>📋 Menú</h2>
 
-<!-- CHEESE -->
-<div class="card item" onclick="toggle('cheese')">
+<div class="item">
 <h3>Cheeseburger</h3>
 <p>$5</p>
-<small>2 carnes · 4 cheddar</small>
 
-<div id="cheese" class="opciones">
-<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
-<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-p="1"></div>
+<label><input type="checkbox" id="extraCarne"> Extra carne (+$2)</label><br>
+<label><input type="checkbox" id="extraCheddar"> Cheddar (+$1)</label><br>
+<label><input type="checkbox" id="extraPanceta"> Panceta (+$1.5)</label><br>
+<label><input type="checkbox" id="extraCebolla"> Cebolla (+$0.5)</label><br>
 
-<div class="quitar">
-Quitar (opcional):<br>
-<label><input type="checkbox"> 1 carne</label><br>
-<label><input type="checkbox"> 2 fetas cheddar</label>
+<button onclick="agregarCheeseburger()">Agregar</button>
 </div>
 
-<button class="accion" onclick="agregar(event,'Cheeseburger',5,'cheese')">Agregar</button>
-</div>
-</div>
-
-<!-- MAGNIFICA -->
-<div class="card item" onclick="toggle('magni')">
-<h3>Magnífica</h3>
-<p>$6</p>
-<small>2 carnes · 2 cheddar · lechuga · tomate · pickles · cebolla · ketchup</small>
-
-<div id="magni" class="opciones">
-<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
-<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-p="1"></div>
-
-<div class="quitar">
-Quitar (opcional):<br>
-<label><input type="checkbox"> cebolla</label><br>
-<label><input type="checkbox"> pickles</label>
-</div>
-
-<button class="accion" onclick="agregar(event,'Magnífica',6,'magni')">Agregar</button>
-</div>
-</div>
-
-<!-- BACON -->
-<div class="card item" onclick="toggle('bacon')">
-<h3>Bacon</h3>
+<div class="item">
+<h3>Pizza</h3>
 <p>$7</p>
-<small>2 carnes · 4 cheddar · 2 pancetas</small>
-
-<div id="bacon" class="opciones">
-<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
-<div class="extra-row">Extra panceta (+$1) <input type="number" min="0" value="0" data-p="1"></div>
-
-<div class="quitar">
-Quitar (opcional):<br>
-<label><input type="checkbox"> 1 panceta</label><br>
-<label><input type="checkbox"> 2 fetas cheddar</label>
+<button onclick="agregar('Pizza',7)">Agregar</button>
 </div>
 
-<button class="accion" onclick="agregar(event,'Bacon',7,'bacon')">Agregar</button>
+<div class="item">
+<h3>Papas Fritas</h3>
+<p>$3</p>
+<button onclick="agregar('Papas Fritas',3)">Agregar</button>
 </div>
-</div>
-
 </section>
 
-<!-- INFO -->
-<section id="info" style="display:none" class="card">
-<h3>Información</h3>
-<p>🕒 Horario: 19:00 a 23:30</p>
-<p>📍 Envíos a domicilio</p>
+<section class="pedido">
+<h2>🛒 Tu Pedido</h2>
+<ul id="listaPedido"></ul>
+<p>Envío: $<span id="envio">2</span></p>
+<p class="total">Total Final: $<span id="total">0</span></p>
 </section>
 
-<!-- PEDIDO -->
-<section class="card">
-<h3>🛒 Tu Pedido</h3>
-<ul id="lista"></ul>
-<p>Envío: $<span id="envio">0</span></p>
-<p><strong>Total: $<span id="total">0</span></strong></p>
-</section>
+<section id="datos">
+<h2>📝 Datos del Cliente</h2>
+<input id="nombre" placeholder="Nombre y apellido">
+<input id="direccion" placeholder="Dirección">
+<textarea id="comentario" placeholder="Comentarios"></textarea>
 
-<!-- DATOS -->
-<section class="card">
-<h3>📍 Datos del cliente</h3>
-
-<input id="nombre" placeholder="Nombre y Apellido">
-<input id="direccion" placeholder="Dirección y altura" onblur="actualizarMapa()">
-<input id="entre" placeholder="Entre calles">
-<textarea id="descripcion" placeholder="Descripción de la casa"></textarea>
-
-<button class="accion" onclick="usarUbicacion()">📍 Usar mi ubicación</button>
-
-<iframe id="mapa" src="https://www.google.com/maps?q=Buenos%20Aires&output=embed"></iframe>
-
-<label><input type="radio" name="pago" value="Transferencia"> Transferencia</label><br>
 <label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
+<label><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
 
-<button class="accion" onclick="confirmar()">Enviar pedido por WhatsApp</button>
+<button onclick="confirmarPedido()">Confirmar pedido</button>
 </section>
 
+<div id="final">
+<h2>📌 Pedido confirmado</h2>
+<div id="resumen"></div>
+<p><strong>Total:</strong> $<span id="totalFinal"></span></p>
+<button id="btnPago" onclick="irMercadoPago()">Pagar Mercado Pago</button>
+<button onclick="volver()">Volver</button>
 </div>
+
+<!-- ADMIN -->
+<button onclick="abrirAdmin()" style="position:fixed;bottom:10px;right:10px;font-size:12px">ADMIN</button>
+
+<section id="adminPanel">
+<h3>🔐 Admin</h3>
+<input type="password" id="adminPass" placeholder="Contraseña">
+<button onclick="loginAdmin()">Entrar</button>
+
+<div id="adminContent" style="display:none">
+<input id="adminWp" placeholder="WhatsApp">
+<input id="adminMp" placeholder="Link Mercado Pago">
+<input id="adminEnvio" type="number" placeholder="Envío">
+<button onclick="guardarConfig()">Guardar</button>
+
+<h4>Pedidos</h4>
+<ul id="adminPedidos"></ul>
+<p>Total vendido: $<span id="adminTotal">0</span></p>
+</div>
+</section>
 
 <script>
-let pedido=[],totalFinal=0;
-const localTienda={lat:-34.6037,lng:-58.3816};
-let clienteLatLng=null;
+let pedido={};
+let totalFinalGlobal=0;
 
-function mostrar(id){
-menu.style.display=id==="menu"?"block":"none";
-info.style.display=id==="info"?"block":"none";
+let config=JSON.parse(localStorage.getItem("config"))||{
+    whatsapp:"5491162911053",
+    mp:"https://link.mercadopago.com.ar/frakev",
+    envio:2
+};
+
+let pedidosAdmin=JSON.parse(localStorage.getItem("pedidosAdmin"))||[];
+
+document.getElementById("envio").textContent=config.envio;
+
+function agregar(nombre,precio){
+    if(!pedido[nombre]) pedido[nombre]={precio,cantidad:1};
+    else pedido[nombre].cantidad++;
+    actualizarPedido();
 }
 
-function toggle(id){
-document.querySelectorAll('.opciones').forEach(o=>o.id!==id&&o.classList.remove('active'));
-document.getElementById(id).classList.toggle('active');
+function agregarCheeseburger(){
+    let precio=5;
+    let extras=[];
+    if(extraCarne.checked){precio+=2;extras.push("Extra carne")}
+    if(extraCheddar.checked){precio+=1;extras.push("Cheddar")}
+    if(extraPanceta.checked){precio+=1.5;extras.push("Panceta")}
+    if(extraCebolla.checked){precio+=0.5;extras.push("Cebolla")}
+    let nombre="Cheeseburger"+(extras.length?" ("+extras.join(", ")+")":"");
+    agregar(nombre,precio);
+    extraCarne.checked=extraCheddar.checked=extraPanceta.checked=extraCebolla.checked=false;
 }
 
-function agregar(e,nombre,precio,id){
-e.stopPropagation();
-let box=document.getElementById(id);
-let extras=0;
-let detalle=[];
-
-box.querySelectorAll('input[type=number]').forEach(i=>{
-let cant=Number(i.value);
-if(cant>0){
-extras+=cant*Number(i.dataset.p);
-detalle.push(`+${cant} extra`);
-}
-});
-
-box.querySelectorAll('input[type=checkbox]').forEach(c=>{
-if(c.checked) detalle.push(`sin ${c.parentNode.textContent.trim()}`);
-});
-
-pedido.push({
-texto:`${nombre} (${detalle.join(", ")||"normal"})`,
-precio:precio+extras
-});
-actualizar();
+function quitar(nombre){
+    pedido[nombre].cantidad--;
+    if(pedido[nombre].cantidad<=0) delete pedido[nombre];
+    actualizarPedido();
 }
 
-function actualizar(){
-lista.innerHTML="";
-let sum=0;
-pedido.forEach((p,i)=>{
-sum+=p.precio;
-lista.innerHTML+=`<li>${p.texto} $${p.precio} <button onclick="pedido.splice(${i},1);actualizar()">x</button></li>`;
-});
-let envio=calcularEnvio();
-envioSpan.textContent=envio;
-totalFinal=sum+envio;
-total.textContent=totalFinal;
+function actualizarPedido(){
+    let lista=listaPedido;
+    lista.innerHTML="";
+    let total=0;
+    for(let p in pedido){
+        let sub=pedido[p].precio*pedido[p].cantidad;
+        total+=sub;
+        lista.innerHTML+=`${p} x${pedido[p].cantidad} $${sub}
+        <button class="quitar" onclick="quitar('${p}')">−</button><br>`;
+    }
+    totalFinalGlobal=total+config.envio;
+    document.getElementById("total").textContent=totalFinalGlobal;
 }
 
-function usarUbicacion(){
-navigator.geolocation.getCurrentPosition(pos=>{
-clienteLatLng={lat:pos.coords.latitude,lng:pos.coords.longitude};
-mapa.src=`https://www.google.com/maps?q=${clienteLatLng.lat},${clienteLatLng.lng}&output=embed`;
-actualizar();
-});
+function confirmarPedido(){
+    let nombre=nombreInput.value;
+    let pago=document.querySelector("input[name=pago]:checked").value;
+
+    let texto="";
+    for(let p in pedido){
+        texto+=`${p} x${pedido[p].cantidad}\n`;
+    }
+
+    pedidosAdmin.push({cliente:nombre,total:totalFinalGlobal});
+    localStorage.setItem("pedidosAdmin",JSON.stringify(pedidosAdmin));
+
+    let msg=`PEDIDO\n${texto}\nTotal $${totalFinalGlobal}`;
+    window.open(`https://wa.me/${config.whatsapp}?text=${encodeURIComponent(msg)}`);
 }
 
-function actualizarMapa(){
-let q=encodeURIComponent(direccion.value+" "+entre.value);
-mapa.src=`https://www.google.com/maps?q=${q}&output=embed`;
+function irMercadoPago(){
+    navigator.clipboard.writeText(totalFinalGlobal);
+    window.location.href=config.mp;
 }
 
-function distanciaKm(a,b){
-const R=6371;
-const dLat=(b.lat-a.lat)*Math.PI/180;
-const dLng=(b.lng-a.lng)*Math.PI/180;
-const x=Math.sin(dLat/2)**2+
-Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*
-Math.sin(dLng/2)**2;
-return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+function volver(){location.reload();}
+
+function abrirAdmin(){adminPanel.style.display="block";}
+function loginAdmin(){
+    if(adminPass.value==="1234"){
+        adminContent.style.display="block";
+        adminWp.value=config.whatsapp;
+        adminMp.value=config.mp;
+        adminEnvio.value=config.envio;
+        renderAdmin();
+    }
 }
-
-function calcularEnvio(){
-if(!clienteLatLng) return 2;
-let d=distanciaKm(localTienda,clienteLatLng);
-if(d<=2) return 2;
-if(d<=4) return 3;
-return 4;
+function guardarConfig(){
+    config.whatsapp=adminWp.value;
+    config.mp=adminMp.value;
+    config.envio=Number(adminEnvio.value);
+    localStorage.setItem("config",JSON.stringify(config));
+    alert("Guardado");
 }
-
-function confirmar(){
-let pago=document.querySelector('input[name=pago]:checked').value;
-let mapsLink=clienteLatLng
-?`https://www.google.com/maps?q=${clienteLatLng.lat},${clienteLatLng.lng}`
-:"";
-
-let msg=`PEDIDO\n\nCliente: ${nombre.value}\n\n`;
-pedido.forEach(p=>msg+=`• ${p.texto}\n`);
-msg+=`\nTotal: $${totalFinal}\nPago: ${pago}\n\nDirección: ${direccion.value}\nEntre calles: ${entre.value}\n${descripcion.value}\n\nUbicación: ${mapsLink}`;
-
-window.open(`https://wa.me/549XXXXXXXXXX?text=${encodeURIComponent(msg)}`);
+function renderAdmin(){
+    adminPedidos.innerHTML="";
+    let t=0;
+    pedidosAdmin.forEach(p=>{
+        t+=p.total;
+        adminPedidos.innerHTML+=`<li>${p.cliente} $${p.total}</li>`;
+    });
+    adminTotal.textContent=t;
 }
 </script>
 
