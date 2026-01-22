@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Tienda Online de Comidas</title>
+<title>Hamburguesería</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -16,82 +16,61 @@ body {
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    color: #222;
 }
 
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0,0,0,0.5);
     z-index: -1;
 }
 
-/* NAV */
-.navbar {
-    position: sticky;
-    top: 0;
-    display: flex;
-    gap: 6px;
-    padding: 10px;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(6px);
-    z-index: 100;
-}
-
-.navbar button {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    background: rgba(255,255,255,0.15);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.navbar button.active {
-    background: #e63946;
-}
-
-/* HEADER */
 header {
-    background: linear-gradient(135deg, #e63946, #c92d3a);
+    background: linear-gradient(135deg,#e63946,#c92d3a);
     color: white;
     padding: 20px;
     text-align: center;
-    border-radius: 0 0 18px 18px;
 }
 
 .container {
     max-width: 720px;
     margin: auto;
-    padding: 10px;
+    padding: 12px;
 }
 
-.section { display: none; }
-.section.active { display: block; }
-
-/* CARDS */
 .card {
-    background: rgba(255,255,255,0.55);
-    border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 12px;
+    background: rgba(255,255,255,0.45);
     backdrop-filter: blur(4px);
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
 }
 
 .item {
-    background: rgba(255,255,255,0.45);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 10px;
+    cursor: pointer;
 }
 
-.item h3 { margin: 0; }
-.price { font-weight: 600; }
+.item h3 {
+    margin: 0;
+}
 
-/* EXTRAS */
+.item small {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.opciones {
+    display: none;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(0,0,0,0.3);
+}
+
+.opciones.active {
+    display: block;
+}
+
 .extra-row {
     display: flex;
     justify-content: space-between;
@@ -101,66 +80,26 @@ header {
 }
 
 .extra-row input {
-    width: 55px;
+    width: 60px;
     padding: 4px;
-    font-size: 13px;
 }
 
-/* QUITAR */
-.quitar-box {
-    margin-top: 8px;
-    padding-top: 6px;
-    border-top: 1px dashed rgba(0,0,0,0.2);
+.quitar {
     font-size: 12px;
     opacity: 0.8;
+    margin-top: 8px;
 }
 
-.quitar-box strong {
-    display: block;
-    margin-bottom: 4px;
-    font-weight: 500;
-}
-
-/* INPUTS */
-input, textarea {
-    width: 100%;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    margin-bottom: 8px;
-}
-
-/* BOTONES */
 button {
+    width: 100%;
+    margin-top: 10px;
     padding: 10px;
-    border-radius: 10px;
     border: none;
+    border-radius: 12px;
     background: #e63946;
     color: white;
     font-weight: 600;
     cursor: pointer;
-}
-
-button.quitarBtn {
-    background: #555;
-    font-size: 12px;
-    padding: 4px 8px;
-}
-
-/* PEDIDO */
-ul { list-style: none; padding: 0; }
-
-li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-
-.total {
-    font-size: 18px;
-    font-weight: 700;
-    text-align: right;
 }
 </style>
 </head>
@@ -168,93 +107,110 @@ li {
 <body>
 
 <header>
-    <h1>🍔 Mi Tienda de Comidas</h1>
-    <p>Pedidos online</p>
+    <h1>🍔 Hamburguesería</h1>
+    <p>Pedidos Online</p>
 </header>
-
-<div class="navbar">
-    <button id="btnMenu" class="active" onclick="mostrarSeccion('menuSection')">MENÚ</button>
-    <button id="btnInfo" onclick="mostrarSeccion('infoSection')">INFORMACIÓN</button>
-</div>
 
 <div class="container">
 
-<div id="menuSection" class="section active">
-
-<div class="card">
-<h2>📋 Menú</h2>
-
-<div class="item">
+<div class="card item" onclick="toggleOpciones('cheese')">
 <h3>Cheeseburger</h3>
-<p class="price">$5</p>
-<small>Base: 2 carnes + 4 fetas de cheddar</small>
+<p>$5</p>
+<small>2 carnes · 4 cheddar</small>
 
-<p><strong>Agregar extras</strong></p>
-<div class="extra-row"><span>Extra carne (+$2)</span><input type="number" id="extraCarne" min="0" value="0"></div>
-<div class="extra-row"><span>Extra cheddar (+$1)</span><input type="number" id="extraCheddar" min="0" value="0"></div>
-<div class="extra-row"><span>Panceta (+$1.5)</span><input type="number" id="extraPanceta" min="0" value="0"></div>
-<div class="extra-row"><span>Cebolla (+$0.5)</span><input type="number" id="extraCebolla" min="0" value="0"></div>
+<div id="cheese" class="opciones">
+<strong>Extras</strong>
+<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-precio="2"></div>
+<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-precio="1"></div>
+<div class="extra-row">Panceta (+$1.5) <input type="number" min="0" value="0" data-precio="1.5"></div>
 
-<div class="quitar-box">
-<strong>Quitar ingredientes (opcional)</strong>
-<div class="extra-row"><span>Carne</span><input type="number" id="quitarCarne" min="0" max="1" value="0"></div>
-<div class="extra-row"><span>Cheddar (2 fetas)</span><input type="number" id="quitarCheddar" min="0" max="2" value="0"></div>
+<div class="quitar">
+<strong>Quitar (opcional)</strong>
+<div class="extra-row">Quitar carne <input type="number" min="0" max="1" value="0"></div>
+<div class="extra-row">Quitar cheddar (2 fetas) <input type="number" min="0" max="2" value="0"></div>
 </div>
 
-<button onclick="agregarCheeseburger()">Agregar al pedido</button>
+<button onclick="agregarBurger(event,'Cheeseburger',5,'cheese')">Agregar</button>
+</div>
 </div>
 
+<div class="card item" onclick="toggleOpciones('magnifica')">
+<h3>La Magnífica</h3>
+<p>$6.5</p>
+<small>2 carnes · 2 cheddar · lechuga · tomate · pickles · cebolla · ketchup</small>
+
+<div id="magnifica" class="opciones">
+<strong>Extras</strong>
+<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-precio="2"></div>
+<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-precio="1"></div>
+
+<div class="quitar">
+<strong>Quitar (opcional)</strong>
+<div class="extra-row">Sin lechuga <input type="checkbox"></div>
+<div class="extra-row">Sin tomate <input type="checkbox"></div>
+<div class="extra-row">Sin pickles <input type="checkbox"></div>
+<div class="extra-row">Sin cebolla <input type="checkbox"></div>
 </div>
 
+<button onclick="agregarBurger(event,'La Magnífica',6.5,'magnifica')">Agregar</button>
+</div>
 </div>
 
-<div id="infoSection" class="section">
-<div class="card">
-<h2>ℹ️ Información</h2>
-<p>Horario: 19:00 a 23:30</p>
-<p>Pagos: Efectivo / Transferencia</p>
-<p>WhatsApp: 11 6291-1053</p>
+<div class="card item" onclick="toggleOpciones('bacon')">
+<h3>Bacon</h3>
+<p>$7</p>
+<small>2 carnes · 4 cheddar · 2 pancetas</small>
+
+<div id="bacon" class="opciones">
+<strong>Extras</strong>
+<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-precio="2"></div>
+<div class="extra-row">Extra panceta (+$1.5) <input type="number" min="0" value="0" data-precio="1.5"></div>
+
+<div class="quitar">
+<strong>Quitar (opcional)</strong>
+<div class="extra-row">Quitar panceta <input type="number" min="0" max="2" value="0"></div>
+</div>
+
+<button onclick="agregarBurger(event,'Bacon',7,'bacon')">Agregar</button>
 </div>
 </div>
 
 </div>
 
 <script>
-let pedido = {};
-let envio = 2;
-
-function mostrarSeccion(id){
-    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    btnMenu.classList.remove('active');
-    btnInfo.classList.remove('active');
-    (id === 'menuSection' ? btnMenu : btnInfo).classList.add('active');
+function toggleOpciones(id){
+    document.querySelectorAll('.opciones').forEach(o=>{
+        if(o.id !== id) o.classList.remove('active');
+    });
+    document.getElementById(id).classList.toggle('active');
 }
 
-function agregarCheeseburger(){
-    let base = 5;
-    let detalles = [];
-    let precioExtras = 0;
+function agregarBurger(e,nombre,precioBase,id){
+    e.stopPropagation();
+    let cont=document.getElementById(id);
+    let extras=cont.querySelectorAll('input[type="number"]');
+    let checks=cont.querySelectorAll('input[type="checkbox"]');
+    let detalle=[];
+    let precio=precioBase;
 
-    if(quitarCarne.valueAsNumber>0) detalles.push("sin carne");
-    if(quitarCheddar.valueAsNumber>0) detalles.push("sin cheddar");
-
-    [["extraCarne","extra carne",2],["extraCheddar","extra cheddar",1],["extraPanceta","panceta",1.5],["extraCebolla","cebolla",0.5]]
-    .forEach(e=>{
-        let qty=document.getElementById(e[0]).valueAsNumber;
-        if(qty>0){
-            detalles.push(`${e[1]} x${qty}`);
-            precioExtras+=qty*e[2];
-            document.getElementById(e[0]).value=0;
+    extras.forEach(i=>{
+        let q=i.valueAsNumber;
+        let p=parseFloat(i.dataset.precio||0);
+        if(q>0){
+            detalle.push(`${q} extra`);
+            precio+=q*p;
+            i.value=0;
         }
     });
 
-    quitarCarne.value=0;
-    quitarCheddar.value=0;
+    checks.forEach(c=>{
+        if(c.checked){
+            detalle.push("sin "+c.parentElement.innerText);
+            c.checked=false;
+        }
+    });
 
-    let nombre="Cheeseburger"+(detalles.length?" ("+detalles.join(", ")+")":"");
-    pedido[nombre]={precio:base+precioExtras,cantidad:1};
-    alert("Producto agregado");
+    alert(`Agregado: ${nombre}\nPrecio: $${precio}`);
 }
 </script>
 
