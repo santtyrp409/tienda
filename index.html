@@ -3,214 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <title>Hamburguesería</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background-image: url("https://images.unsplash.com/photo-1550547660-d9450f859349");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Poppins,sans-serif;
+background:url("https://images.unsplash.com/photo-1550547660-d9450f859349") center/cover fixed;
 }
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: -1;
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.55);
+z-index:-1;
 }
-
-header {
-    background: linear-gradient(135deg,#e63946,#c92d3a);
-    color: white;
-    padding: 20px;
-    text-align: center;
+header{
+background:#e63946;
+color:#fff;
+padding:15px;
+text-align:center;
 }
-
-.container {
-    max-width: 720px;
-    margin: auto;
-    padding: 12px;
+nav{
+display:flex;
+justify-content:center;
+gap:30px;
+background:#111;
+padding:10px;
 }
-
-.card {
-    background: rgba(255,255,255,0.45);
-    backdrop-filter: blur(4px);
-    border-radius: 16px;
-    padding: 14px;
-    margin-bottom: 14px;
+nav button{
+background:none;
+border:none;
+color:#fff;
+font-weight:600;
+cursor:pointer;
 }
-
-.item {
-    cursor: pointer;
+.container{max-width:760px;margin:auto;padding:12px}
+.card{
+background:rgba(255,255,255,.4);
+backdrop-filter:blur(4px);
+border-radius:16px;
+padding:14px;
+margin-bottom:14px;
 }
-
-.item h3 {
-    margin: 0;
+.item{cursor:pointer}
+.opciones{display:none;margin-top:10px;border-top:1px dashed rgba(0,0,0,.3);padding-top:8px}
+.opciones.active{display:block}
+.extra-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.extra-row input{width:60px}
+.quitar{font-size:12px;opacity:.85;margin-top:6px}
+button.accion{
+width:100%;
+margin-top:8px;
+padding:10px;
+border:none;
+border-radius:12px;
+background:#e63946;
+color:#fff;
+font-weight:600;
+cursor:pointer;
 }
-
-.item small {
-    font-size: 13px;
-    opacity: 0.9;
-}
-
-.opciones {
-    display: none;
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px dashed rgba(0,0,0,0.3);
-}
-
-.opciones.active {
-    display: block;
-}
-
-.extra-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    margin-bottom: 6px;
-}
-
-.extra-row input {
-    width: 60px;
-    padding: 4px;
-}
-
-.quitar {
-    font-size: 12px;
-    opacity: 0.8;
-    margin-top: 8px;
-}
-
-button {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    border: none;
-    border-radius: 12px;
-    background: #e63946;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-}
+ul{padding-left:18px}
 </style>
 </head>
 
 <body>
 
 <header>
-    <h1>🍔 Hamburguesería</h1>
-    <p>Pedidos Online</p>
+<h1>🍔 Hamburguesería</h1>
+<p>Pedidos Online</p>
 </header>
+
+<nav>
+<button onclick="mostrar('menu')">MENÚ</button>
+<button onclick="mostrar('info')">INFORMACIÓN</button>
+</nav>
 
 <div class="container">
 
-<div class="card item" onclick="toggleOpciones('cheese')">
+<section id="menu">
+
+<div class="card item" onclick="toggle('cheese')">
 <h3>Cheeseburger</h3>
 <p>$5</p>
 <small>2 carnes · 4 cheddar</small>
 
 <div id="cheese" class="opciones">
-<strong>Extras</strong>
-<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-precio="2"></div>
-<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-precio="1"></div>
-<div class="extra-row">Panceta (+$1.5) <input type="number" min="0" value="0" data-precio="1.5"></div>
+<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
+<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-p="1"></div>
 
 <div class="quitar">
 <strong>Quitar (opcional)</strong>
 <div class="extra-row">Quitar carne <input type="number" min="0" max="1" value="0"></div>
-<div class="extra-row">Quitar cheddar (2 fetas) <input type="number" min="0" max="2" value="0"></div>
+<div class="extra-row">Quitar cheddar <input type="number" min="0" max="2" value="0"></div>
 </div>
 
-<button onclick="agregarBurger(event,'Cheeseburger',5,'cheese')">Agregar</button>
+<button class="accion" onclick="agregar(event,'Cheeseburger',5,'cheese')">Agregar</button>
 </div>
 </div>
 
-<div class="card item" onclick="toggleOpciones('magnifica')">
+<div class="card item" onclick="toggle('magnifica')">
 <h3>La Magnífica</h3>
 <p>$6.5</p>
 <small>2 carnes · 2 cheddar · lechuga · tomate · pickles · cebolla · ketchup</small>
 
 <div id="magnifica" class="opciones">
-<strong>Extras</strong>
-<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-precio="2"></div>
-<div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-precio="1"></div>
+<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
 
 <div class="quitar">
 <strong>Quitar (opcional)</strong>
 <div class="extra-row">Sin lechuga <input type="checkbox"></div>
 <div class="extra-row">Sin tomate <input type="checkbox"></div>
-<div class="extra-row">Sin pickles <input type="checkbox"></div>
-<div class="extra-row">Sin cebolla <input type="checkbox"></div>
 </div>
 
-<button onclick="agregarBurger(event,'La Magnífica',6.5,'magnifica')">Agregar</button>
+<button class="accion" onclick="agregar(event,'La Magnífica',6.5,'magnifica')">Agregar</button>
 </div>
 </div>
 
-<div class="card item" onclick="toggleOpciones('bacon')">
+<div class="card item" onclick="toggle('bacon')">
 <h3>Bacon</h3>
 <p>$7</p>
 <small>2 carnes · 4 cheddar · 2 pancetas</small>
 
 <div id="bacon" class="opciones">
-<strong>Extras</strong>
-<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-precio="2"></div>
-<div class="extra-row">Extra panceta (+$1.5) <input type="number" min="0" value="0" data-precio="1.5"></div>
+<div class="extra-row">Extra panceta (+$1.5) <input type="number" min="0" value="0" data-p="1.5"></div>
 
 <div class="quitar">
 <strong>Quitar (opcional)</strong>
 <div class="extra-row">Quitar panceta <input type="number" min="0" max="2" value="0"></div>
 </div>
 
-<button onclick="agregarBurger(event,'Bacon',7,'bacon')">Agregar</button>
+<button class="accion" onclick="agregar(event,'Bacon',7,'bacon')">Agregar</button>
 </div>
 </div>
+
+</section>
+
+<section id="info" style="display:none" class="card">
+<h3>Información de la tienda</h3>
+<p>🕒 Horario: 19:00 a 23:30</p>
+<p>📍 Envíos en la zona</p>
+</section>
+
+<section class="card">
+<h3>🛒 Tu Pedido</h3>
+<ul id="lista"></ul>
+<p>Envío: $2</p>
+<p><strong>Total: $<span id="total">0</span></strong></p>
+</section>
+
+<section class="card">
+<h3>📝 Datos</h3>
+<input placeholder="Nombre" id="nombre">
+<input placeholder="Dirección" id="direccion">
+<textarea placeholder="Comentarios" id="comentario"></textarea>
+
+<label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
+<label><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
+
+<button class="accion" onclick="confirmar()">Confirmar Pedido</button>
+</section>
 
 </div>
 
 <script>
-function toggleOpciones(id){
-    document.querySelectorAll('.opciones').forEach(o=>{
-        if(o.id !== id) o.classList.remove('active');
-    });
-    document.getElementById(id).classList.toggle('active');
+let pedido=[],envio=2,totalFinal=0;
+
+function mostrar(id){
+document.getElementById("menu").style.display=id=="menu"?"block":"none";
+document.getElementById("info").style.display=id=="info"?"block":"none";
 }
 
-function agregarBurger(e,nombre,precioBase,id){
-    e.stopPropagation();
-    let cont=document.getElementById(id);
-    let extras=cont.querySelectorAll('input[type="number"]');
-    let checks=cont.querySelectorAll('input[type="checkbox"]');
-    let detalle=[];
-    let precio=precioBase;
+function toggle(id){
+document.querySelectorAll('.opciones').forEach(o=>o.id!==id&&o.classList.remove('active'));
+document.getElementById(id).classList.toggle('active');
+}
 
-    extras.forEach(i=>{
-        let q=i.valueAsNumber;
-        let p=parseFloat(i.dataset.precio||0);
-        if(q>0){
-            detalle.push(`${q} extra`);
-            precio+=q*p;
-            i.value=0;
-        }
-    });
+function agregar(e,nombre,precio,id){
+e.stopPropagation();
+let box=document.getElementById(id);
+let total=precio;
+let desc=nombre;
+box.querySelectorAll('input[type=number]').forEach(i=>{
+let q=i.valueAsNumber,p=i.dataset.p;
+if(q>0){total+=q*p;desc+=` +${q} extra`;i.value=0;}
+});
+box.querySelectorAll('input[type=checkbox]').forEach(c=>{
+if(c.checked){desc+=` sin ${c.parentElement.innerText}`;c.checked=false;}
+});
+pedido.push({desc,precio:total});
+actualizar();
+}
 
-    checks.forEach(c=>{
-        if(c.checked){
-            detalle.push("sin "+c.parentElement.innerText);
-            c.checked=false;
-        }
-    });
+function actualizar(){
+let ul=document.getElementById("lista"),sum=0;
+ul.innerHTML="";
+pedido.forEach((p,i)=>{
+sum+=p.precio;
+ul.innerHTML+=`<li>${p.desc} $${p.precio} <button onclick="pedido.splice(${i},1);actualizar()">x</button></li>`;
+});
+totalFinal=sum+envio;
+document.getElementById("total").innerText=totalFinal;
+}
 
-    alert(`Agregado: ${nombre}\nPrecio: $${precio}`);
+function confirmar(){
+let nombre=nombre.value;
+let dir=direccion.value;
+let pago=document.querySelector('input[name=pago]:checked').value;
+let msg=`🍔 NUEVO PEDIDO%0A${nombre}%0A${dir}%0A${pago}%0A`;
+pedido.forEach(p=>msg+=`${p.desc} $${p.precio}%0A`);
+msg+=`TOTAL $${totalFinal}`;
+
+if(pago==="Transferencia"){
+navigator.clipboard.writeText(totalFinal);
+window.location.href="https://link.mercadopago.com.ar/frakev";
+setTimeout(()=>window.open("https://wa.me/5491162911053?text="+msg,"_blank"),3000);
+}else{
+window.open("https://wa.me/5491162911053?text="+msg,"_blank");
+}
 }
 </script>
 
