@@ -41,7 +41,7 @@ cursor:pointer;
 }
 .container{max-width:760px;margin:auto;padding:12px}
 .card{
-background:rgba(255,255,255,.4);
+background:rgba(255,255,255,.35);
 backdrop-filter:blur(4px);
 border-radius:16px;
 padding:14px;
@@ -55,7 +55,7 @@ margin-bottom:14px;
 .quitar{font-size:12px;opacity:.85;margin-top:6px}
 button.accion{
 width:100%;
-margin-top:8px;
+margin-top:10px;
 padding:10px;
 border:none;
 border-radius:12px;
@@ -63,6 +63,13 @@ background:#e63946;
 color:#fff;
 font-weight:600;
 cursor:pointer;
+}
+input, textarea{
+width:100%;
+padding:8px;
+margin-bottom:8px;
+border-radius:8px;
+border:none;
 }
 ul{padding-left:18px}
 </style>
@@ -154,13 +161,15 @@ ul{padding-left:18px}
 </section>
 
 <section class="card">
-<h3>📝 Datos</h3>
-<input placeholder="Nombre" id="nombre">
-<input placeholder="Dirección" id="direccion">
-<textarea placeholder="Comentarios" id="comentario"></textarea>
+<h3>📝 Datos del cliente</h3>
 
+<input id="nombre" placeholder="Nombre y Apellido">
+<input id="direccion" placeholder="Dirección y altura">
+<input id="entre" placeholder="Entre calles">
+<textarea id="descripcion" placeholder="Descripción de la casa"></textarea>
+
+<label><input type="radio" name="pago" value="Transferencia"> Transferencia</label><br>
 <label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
-<label><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
 
 <button class="accion" onclick="confirmar()">Confirmar Pedido</button>
 </section>
@@ -171,8 +180,8 @@ ul{padding-left:18px}
 let pedido=[],envio=2,totalFinal=0;
 
 function mostrar(id){
-document.getElementById("menu").style.display=id=="menu"?"block":"none";
-document.getElementById("info").style.display=id=="info"?"block":"none";
+menu.style.display=id==="menu"?"block":"none";
+info.style.display=id==="info"?"block":"none";
 }
 
 function toggle(id){
@@ -185,33 +194,40 @@ e.stopPropagation();
 let box=document.getElementById(id);
 let total=precio;
 let desc=nombre;
+
 box.querySelectorAll('input[type=number]').forEach(i=>{
 let q=i.valueAsNumber,p=i.dataset.p;
 if(q>0){total+=q*p;desc+=` +${q} extra`;i.value=0;}
 });
+
 box.querySelectorAll('input[type=checkbox]').forEach(c=>{
 if(c.checked){desc+=` sin ${c.parentElement.innerText}`;c.checked=false;}
 });
+
 pedido.push({desc,precio:total});
 actualizar();
 }
 
 function actualizar(){
-let ul=document.getElementById("lista"),sum=0;
-ul.innerHTML="";
+lista.innerHTML="";
+let sum=0;
 pedido.forEach((p,i)=>{
 sum+=p.precio;
-ul.innerHTML+=`<li>${p.desc} $${p.precio} <button onclick="pedido.splice(${i},1);actualizar()">x</button></li>`;
+lista.innerHTML+=`<li>${p.desc} $${p.precio} <button onclick="pedido.splice(${i},1);actualizar()">x</button></li>`;
 });
 totalFinal=sum+envio;
-document.getElementById("total").innerText=totalFinal;
+total.innerText=totalFinal;
 }
 
 function confirmar(){
-let nombre=nombre.value;
-let dir=direccion.value;
 let pago=document.querySelector('input[name=pago]:checked').value;
-let msg=`🍔 NUEVO PEDIDO%0A${nombre}%0A${dir}%0A${pago}%0A`;
+let msg=`🍔 NUEVO PEDIDO%0A
+Nombre: ${nombre.value}%0A
+Dirección: ${direccion.value}%0A
+Entre calles: ${entre.value}%0A
+Casa: ${descripcion.value}%0A
+Pago: ${pago}%0A%0A`;
+
 pedido.forEach(p=>msg+=`${p.desc} $${p.precio}%0A`);
 msg+=`TOTAL $${totalFinal}`;
 
