@@ -19,7 +19,6 @@ body {
     color: #222;
 }
 
-/* OVERLAY */
 body::before {
     content: "";
     position: fixed;
@@ -28,16 +27,16 @@ body::before {
     z-index: -1;
 }
 
-/* NAV BAR */
+/* NAV */
 .navbar {
     position: sticky;
     top: 0;
-    z-index: 100;
     display: flex;
     gap: 6px;
     padding: 10px;
     background: rgba(0,0,0,0.85);
     backdrop-filter: blur(6px);
+    z-index: 100;
 }
 
 .navbar button {
@@ -45,9 +44,9 @@ body::before {
     padding: 10px;
     border-radius: 10px;
     border: none;
-    font-weight: 600;
     background: rgba(255,255,255,0.15);
     color: white;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -59,35 +58,23 @@ body::before {
 header {
     background: linear-gradient(135deg, #e63946, #c92d3a);
     color: white;
-    padding: 20px 15px;
-    border-radius: 0 0 18px 18px;
+    padding: 20px;
     text-align: center;
+    border-radius: 0 0 18px 18px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 26px;
-}
-
-/* CONTENEDOR */
 .container {
     max-width: 720px;
     margin: auto;
     padding: 10px;
 }
 
-/* SECCIONES */
-.section {
-    display: none;
-}
+.section { display: none; }
+.section.active { display: block; }
 
-.section.active {
-    display: block;
-}
-
-/* TARJETAS */
+/* CARDS */
 .card {
-    background: rgba(255,255,255,0.65);
+    background: rgba(255,255,255,0.55);
     border-radius: 14px;
     padding: 14px;
     margin-bottom: 12px;
@@ -95,7 +82,7 @@ header h1 {
 }
 
 .item {
-    background: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.45);
     border-radius: 12px;
     padding: 12px;
     margin-bottom: 10px;
@@ -108,11 +95,30 @@ header h1 {
 .extra-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
     margin-bottom: 6px;
 }
 
 .extra-row input {
-    width: 60px;
+    width: 55px;
+    padding: 4px;
+    font-size: 13px;
+}
+
+/* QUITAR */
+.quitar-box {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(0,0,0,0.2);
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.quitar-box strong {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
 }
 
 /* INPUTS */
@@ -135,14 +141,14 @@ button {
     cursor: pointer;
 }
 
-button.quitar {
+button.quitarBtn {
     background: #555;
-    padding: 4px 8px;
     font-size: 12px;
+    padding: 4px 8px;
 }
 
 /* PEDIDO */
-ul { padding: 0; list-style: none; }
+ul { list-style: none; padding: 0; }
 
 li {
     display: flex;
@@ -156,11 +162,6 @@ li {
     font-weight: 700;
     text-align: right;
 }
-
-/* FINAL */
-#final {
-    display: none;
-}
 </style>
 </head>
 
@@ -171,7 +172,6 @@ li {
     <p>Pedidos online</p>
 </header>
 
-<!-- NAV BAR -->
 <div class="navbar">
     <button id="btnMenu" class="active" onclick="mostrarSeccion('menuSection')">MENÚ</button>
     <button id="btnInfo" onclick="mostrarSeccion('infoSection')">INFORMACIÓN</button>
@@ -179,7 +179,6 @@ li {
 
 <div class="container">
 
-<!-- MENU -->
 <div id="menuSection" class="section active">
 
 <div class="card">
@@ -188,66 +187,34 @@ li {
 <div class="item">
 <h3>Cheeseburger</h3>
 <p class="price">$5</p>
-<small>Incluye 2 carnes + 4 fetas de cheddar</small>
+<small>Base: 2 carnes + 4 fetas de cheddar</small>
 
-<p><strong>Quitar (opcional)</strong></p>
-<div class="extra-row"><span>Carne</span><input type="number" id="quitarCarne" min="0" max="1" value="0"></div>
-<div class="extra-row"><span>Cheddar (2 fetas)</span><input type="number" id="quitarCheddar" min="0" max="2" value="0"></div>
-
-<p><strong>Agregar</strong></p>
+<p><strong>Agregar extras</strong></p>
 <div class="extra-row"><span>Extra carne (+$2)</span><input type="number" id="extraCarne" min="0" value="0"></div>
 <div class="extra-row"><span>Extra cheddar (+$1)</span><input type="number" id="extraCheddar" min="0" value="0"></div>
 <div class="extra-row"><span>Panceta (+$1.5)</span><input type="number" id="extraPanceta" min="0" value="0"></div>
 <div class="extra-row"><span>Cebolla (+$0.5)</span><input type="number" id="extraCebolla" min="0" value="0"></div>
 
+<div class="quitar-box">
+<strong>Quitar ingredientes (opcional)</strong>
+<div class="extra-row"><span>Carne</span><input type="number" id="quitarCarne" min="0" max="1" value="0"></div>
+<div class="extra-row"><span>Cheddar (2 fetas)</span><input type="number" id="quitarCheddar" min="0" max="2" value="0"></div>
+</div>
+
 <button onclick="agregarCheeseburger()">Agregar al pedido</button>
 </div>
 
-<div class="item">
-<h3>Pizza</h3>
-<p class="price">$7</p>
-<button onclick="agregar('Pizza',7)">Agregar</button>
-</div>
-
-<div class="item">
-<h3>Papas Fritas</h3>
-<p class="price">$3</p>
-<button onclick="agregar('Papas Fritas',3)">Agregar</button>
 </div>
 
 </div>
 
-<div class="card pedido">
-<h2>🛒 Tu Pedido</h2>
-<ul id="listaPedido"></ul>
-<p>Envío: $2</p>
-<p class="total">$<span id="total">0</span></p>
-</div>
-
-<div class="card">
-<h2>📝 Datos</h2>
-<input id="nombre" placeholder="Nombre">
-<label><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
-<label><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
-<input id="direccion" placeholder="Dirección">
-<textarea id="comentario" placeholder="Comentarios"></textarea>
-<button onclick="confirmarPedido()">Confirmar pedido</button>
-</div>
-
-</div>
-
-<!-- INFO -->
 <div id="infoSection" class="section">
-
 <div class="card">
-<h2>ℹ️ Información de la tienda</h2>
-<p><strong>Horario:</strong> 19:00 a 23:30</p>
-<p><strong>Zona de envío:</strong> Barrio y alrededores</p>
-<p><strong>Formas de pago:</strong> Efectivo / Transferencia (Mercado Pago)</p>
-<p><strong>WhatsApp:</strong> 11 6291-1053</p>
-<p><strong>Tiempo estimado:</strong> 30 a 45 minutos</p>
+<h2>ℹ️ Información</h2>
+<p>Horario: 19:00 a 23:30</p>
+<p>Pagos: Efectivo / Transferencia</p>
+<p>WhatsApp: 11 6291-1053</p>
 </div>
-
 </div>
 
 </div>
@@ -255,7 +222,6 @@ li {
 <script>
 let pedido = {};
 let envio = 2;
-let totalFinalGlobal = 0;
 
 function mostrarSeccion(id){
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -263,12 +229,6 @@ function mostrarSeccion(id){
     btnMenu.classList.remove('active');
     btnInfo.classList.remove('active');
     (id === 'menuSection' ? btnMenu : btnInfo).classList.add('active');
-}
-
-function agregar(nombre, precio){
-    pedido[nombre] = pedido[nombre] || {precio, cantidad:0};
-    pedido[nombre].cantidad++;
-    actualizarPedido();
 }
 
 function agregarCheeseburger(){
@@ -293,24 +253,8 @@ function agregarCheeseburger(){
     quitarCheddar.value=0;
 
     let nombre="Cheeseburger"+(detalles.length?" ("+detalles.join(", ")+")":"");
-    agregar(nombre, base+precioExtras);
-}
-
-function actualizarPedido(){
-    listaPedido.innerHTML="";
-    let total=0;
-    for(let i in pedido){
-        let sub=pedido[i].precio*pedido[i].cantidad;
-        total+=sub;
-        listaPedido.innerHTML+=`<li>${i} x${pedido[i].cantidad} $${sub}
-        <button class="quitar" onclick="pedido['${i}'].cantidad--; if(pedido['${i}'].cantidad<=0) delete pedido['${i}']; actualizarPedido()">−</button></li>`;
-    }
-    totalFinalGlobal=total+envio;
-    total.textContent=totalFinalGlobal;
-}
-
-function confirmarPedido(){
-    alert("Pedido confirmado. Flujo de pago y WhatsApp sigue igual que antes.");
+    pedido[nombre]={precio:base+precioExtras,cantidad:1};
+    alert("Producto agregado");
 }
 </script>
 
