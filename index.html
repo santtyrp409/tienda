@@ -19,29 +19,12 @@ inset:0;
 background:rgba(0,0,0,.55);
 z-index:-1;
 }
-header{
-background:#e63946;
-color:#fff;
-padding:15px;
-text-align:center;
-}
-nav{
-display:flex;
-justify-content:center;
-gap:30px;
-background:#111;
-padding:10px;
-}
-nav button{
-background:none;
-border:none;
-color:#fff;
-font-weight:600;
-cursor:pointer;
-}
+header{background:#e63946;color:#fff;padding:15px;text-align:center}
+nav{display:flex;justify-content:center;gap:30px;background:#111;padding:10px}
+nav button{background:none;border:none;color:#fff;font-weight:600;cursor:pointer}
 .container{max-width:760px;margin:auto;padding:12px}
 .card{
-background:rgba(255,255,255,.35);
+background:rgba(255,255,255,.28);
 backdrop-filter:blur(4px);
 border-radius:16px;
 padding:14px;
@@ -71,6 +54,7 @@ margin-bottom:8px;
 border-radius:8px;
 border:none;
 }
+iframe{width:100%;height:220px;border-radius:12px;border:0}
 ul{padding-left:18px}
 </style>
 </head>
@@ -90,73 +74,27 @@ ul{padding-left:18px}
 <div class="container">
 
 <section id="menu">
-
 <div class="card item" onclick="toggle('cheese')">
 <h3>Cheeseburger</h3>
 <p>$5</p>
 <small>2 carnes · 4 cheddar</small>
-
 <div id="cheese" class="opciones">
 <div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
 <div class="extra-row">Extra cheddar (+$1) <input type="number" min="0" value="0" data-p="1"></div>
-
-<div class="quitar">
-<strong>Quitar (opcional)</strong>
-<div class="extra-row">Quitar carne <input type="number" min="0" max="1" value="0"></div>
-<div class="extra-row">Quitar cheddar <input type="number" min="0" max="2" value="0"></div>
-</div>
-
 <button class="accion" onclick="agregar(event,'Cheeseburger',5,'cheese')">Agregar</button>
 </div>
 </div>
-
-<div class="card item" onclick="toggle('magnifica')">
-<h3>La Magnífica</h3>
-<p>$6.5</p>
-<small>2 carnes · 2 cheddar · lechuga · tomate · pickles · cebolla · ketchup</small>
-
-<div id="magnifica" class="opciones">
-<div class="extra-row">Extra carne (+$2) <input type="number" min="0" value="0" data-p="2"></div>
-
-<div class="quitar">
-<strong>Quitar (opcional)</strong>
-<div class="extra-row">Sin lechuga <input type="checkbox"></div>
-<div class="extra-row">Sin tomate <input type="checkbox"></div>
-</div>
-
-<button class="accion" onclick="agregar(event,'La Magnífica',6.5,'magnifica')">Agregar</button>
-</div>
-</div>
-
-<div class="card item" onclick="toggle('bacon')">
-<h3>Bacon</h3>
-<p>$7</p>
-<small>2 carnes · 4 cheddar · 2 pancetas</small>
-
-<div id="bacon" class="opciones">
-<div class="extra-row">Extra panceta (+$1.5) <input type="number" min="0" value="0" data-p="1.5"></div>
-
-<div class="quitar">
-<strong>Quitar (opcional)</strong>
-<div class="extra-row">Quitar panceta <input type="number" min="0" max="2" value="0"></div>
-</div>
-
-<button class="accion" onclick="agregar(event,'Bacon',7,'bacon')">Agregar</button>
-</div>
-</div>
-
 </section>
 
 <section id="info" style="display:none" class="card">
-<h3>Información de la tienda</h3>
-<p>🕒 Horario: 19:00 a 23:30</p>
-<p>📍 Envíos en la zona</p>
+<h3>Información</h3>
+<p>🕒 19:00 a 23:30</p>
 </section>
 
 <section class="card">
 <h3>🛒 Tu Pedido</h3>
 <ul id="lista"></ul>
-<p>Envío: $2</p>
+<p>Envío: $<span id="envio">0</span></p>
 <p><strong>Total: $<span id="total">0</span></strong></p>
 </section>
 
@@ -164,8 +102,13 @@ ul{padding-left:18px}
 <h3>📝 Datos del cliente</h3>
 
 <input id="nombre" placeholder="Nombre y Apellido">
-<input id="direccion" placeholder="Dirección y altura">
+<input id="direccion" placeholder="Dirección y altura" onblur="actualizarMapa()">
 <input id="entre" placeholder="Entre calles">
+
+<button class="accion" onclick="usarUbicacion()">📍 Usar mi ubicación</button>
+
+<iframe id="mapa" src="https://www.google.com/maps?q=Buenos%20Aires&output=embed"></iframe>
+
 <textarea id="descripcion" placeholder="Descripción de la casa"></textarea>
 
 <label><input type="radio" name="pago" value="Transferencia"> Transferencia</label><br>
@@ -177,7 +120,9 @@ ul{padding-left:18px}
 </div>
 
 <script>
-let pedido=[],envio=2,totalFinal=0;
+let pedido=[],totalFinal=0;
+const localTienda={lat:-34.6037,lng:-58.3816};
+let clienteLatLng=null;
 
 function mostrar(id){
 menu.style.display=id==="menu"?"block":"none";
@@ -191,20 +136,7 @@ document.getElementById(id).classList.toggle('active');
 
 function agregar(e,nombre,precio,id){
 e.stopPropagation();
-let box=document.getElementById(id);
-let total=precio;
-let desc=nombre;
-
-box.querySelectorAll('input[type=number]').forEach(i=>{
-let q=i.valueAsNumber,p=i.dataset.p;
-if(q>0){total+=q*p;desc+=` +${q} extra`;i.value=0;}
-});
-
-box.querySelectorAll('input[type=checkbox]').forEach(c=>{
-if(c.checked){desc+=` sin ${c.parentElement.innerText}`;c.checked=false;}
-});
-
-pedido.push({desc,precio:total});
+pedido.push({desc:nombre,precio});
 actualizar();
 }
 
@@ -215,30 +147,68 @@ pedido.forEach((p,i)=>{
 sum+=p.precio;
 lista.innerHTML+=`<li>${p.desc} $${p.precio} <button onclick="pedido.splice(${i},1);actualizar()">x</button></li>`;
 });
+let envio=calcularEnvio();
+envioSpan.textContent=envio;
 totalFinal=sum+envio;
-total.innerText=totalFinal;
+total.textContent=totalFinal;
 }
 
-function confirmar(){
-let pago=document.querySelector('input[name=pago]:checked').value;
-let msg=`🍔 NUEVO PEDIDO%0A
-Nombre: ${nombre.value}%0A
-Dirección: ${direccion.value}%0A
-Entre calles: ${entre.value}%0A
-Casa: ${descripcion.value}%0A
-Pago: ${pago}%0A%0A`;
-
-pedido.forEach(p=>msg+=`${p.desc} $${p.precio}%0A`);
-msg+=`TOTAL $${totalFinal}`;
-
-if(pago==="Transferencia"){
-navigator.clipboard.writeText(totalFinal);
-window.location.href="https://link.mercadopago.com.ar/frakev";
-setTimeout(()=>window.open("https://wa.me/5491162911053?text="+msg,"_blank"),3000);
-}else{
-window.open("https://wa.me/5491162911053?text="+msg,"_blank");
+function actualizarMapa(){
+let q=encodeURIComponent(direccion.value+" "+entre.value);
+mapa.src=`https://www.google.com/maps?q=${q}&output=embed`;
+guardarDatos();
 }
+
+function usarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+clienteLatLng={lat:pos.coords.latitude,lng:pos.coords.longitude};
+mapa.src=`https://www.google.com/maps?q=${clienteLatLng.lat},${clienteLatLng.lng}&output=embed`;
+actualizar();
+guardarDatos();
+});
 }
+
+function distanciaKm(a,b){
+const R=6371;
+const dLat=(b.lat-a.lat)*Math.PI/180;
+const dLng=(b.lng-a.lng)*Math.PI/180;
+const x=Math.sin(dLat/2)**2+
+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*
+Math.sin(dLng/2)**2;
+return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+
+function calcularEnvio(){
+if(!clienteLatLng) return 2;
+let d=distanciaKm(localTienda,clienteLatLng);
+if(d<=2) return 2;
+if(d<=4) return 3;
+return 4;
+}
+
+function guardarDatos(){
+localStorage.setItem("cliente",JSON.stringify({
+nombre:nombre.value,
+direccion:direccion.value,
+entre:entre.value,
+descripcion:descripcion.value,
+clienteLatLng
+}));
+}
+
+(function cargar(){
+let d=localStorage.getItem("cliente");
+if(!d) return;
+d=JSON.parse(d);
+nombre.value=d.nombre||"";
+direccion.value=d.direccion||"";
+entre.value=d.entre||"";
+descripcion.value=d.descripcion||"";
+clienteLatLng=d.clienteLatLng;
+if(clienteLatLng){
+mapa.src=`https://www.google.com/maps?q=${clienteLatLng.lat},${clienteLatLng.lng}&output=embed`;
+}
+})();
 </script>
 
 </body>
